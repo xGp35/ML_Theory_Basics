@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 start_load = time.time()
 logging.info('Loading data from data/iris.csv')
-data = pd.read_csv('data/iris.csv')
+data = pd.read_csv('../data/iris.csv')
 le = LabelEncoder()
 data['type'] = le.fit_transform(data['species'])
 data = data.drop(columns=['species'])

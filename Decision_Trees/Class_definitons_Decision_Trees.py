@@ -4,7 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from typing import Optional, Any
 
 
-data = pd.read_csv('data/iris.csv')
+data = pd.read_csv('../data/iris.csv')
 le = LabelEncoder()
 data['type'] = le.fit_transform(data['species'])
 data = data.drop(columns=['species'])
