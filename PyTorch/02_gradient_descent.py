@@ -8,6 +8,28 @@ def gradient_descent(function_name,f, df, x0, alpha, steps=200):
         if abs(df(x)) < 0.001: # This is a stopping condition. If the slope at the new x is less than 0.001, then take it as done. This means the function is nearly flat here, so we are near a minimum. We check the slope, not the step size (alpha * slope), because a tiny alpha would make the step small even on a steep slope. Not foolproof: a flat region (like the bottom of x^4) has a small slope over a wide range.
             print(f"Slope too low to continue. I think you should be happy now.")
             print(f"Converged at step {i+1}: x = {x}.")
+            return x
+        
+        if abs(x) > 1e6: # This is condition for divergence. It did not converge to any value
+            print(f"Be sad, your solution did not coenverge. Do better, choose better hyperparameters.")
+            print(f"Diverged at step {i+1}: x = {x}")
+            return x
+    # Third outcome: neither converged nor diverged, we just ran out of steps (e.g. linear keeps sliding downhill, |x| keeps bouncing)
+    print(f"Ran out of steps without converging or diverging. Try more steps or a different alpha.")
+    print(f"Ended at x = {x:.6f}, f(x) = {f(x):.6f}")
+    return x
+
+
+def gradient_descent(function_name,f, df, x0, alpha, steps=200):
+    print("-------------------------------------")
+    print(f"So you have given A {function_name}")
+    x = x0
+    for i in range(steps):
+        x = x - alpha * df(x)
+
+        if abs(df(x)) < 0.001: # This is a stopping condition. If the slope at the new x is less than 0.001, then take it as done. This means the function is nearly flat here, so we are near a minimum. We check the slope, not the step size (alpha * slope), because a tiny alpha would make the step small even on a steep slope. Not foolproof: a flat region (like the bottom of x^4) has a small slope over a wide range.
+            print(f"Slope too low to continue. I think you should be happy now.")
+            print(f"Converged at step {i+1}: x = {x}.")
             print("The x value above is the approximate local minimum near the starting point")
             print(f"f(x) : {f(x)}. This is the value of the function at that local minimum. It is not guaranteed to be the minimum value of the whole function")
             print("As we will be trying to minimize the error function function E, this will be the lowest error we can reach from where we started, not necessarily the lowest possible error. Also, it would be achieved at this particular x.")
