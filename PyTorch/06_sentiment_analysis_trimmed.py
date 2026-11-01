@@ -254,3 +254,31 @@ with torch.no_grad():
     print(f"F1 score: {f1_score(inf_labels, inf_predicted_labels, average='weighted'):.2%}")
     print(classification_report(inf_labels, inf_predicted_labels, target_names=['Negative', 'Positive']))
 
+
+# --- Predict sentiment for a single sentence ---
+def predict_sentiment(sentence, model, token_map, max_len=10):
+    """
+    Takes a raw sentence string, tokenizes it using the training vocab,
+    and returns the model's sentiment prediction.
+    Threshold: >= 0.5 is Positive, < 0.5 is Negative.
+    """
+    cleaned = re.sub(r'[^\w\s]', '', sentence).lower()
+    token_ids = [token_map.get(word, token_map["<UNK>"]) for word in cleaned.split()]
+    token_ids = token_ids[:max_len]
+    token_ids += [0] * (max_len - len(token_ids))
+    X = torch.tensor(token_ids).unsqueeze(0)  # [1, T] — add batch dimension
+
+    model.eval()
+    with torch.no_grad():
+        probability = model(X).squeeze().item()
+
+    label = "Positive" if probability >= 0.5 else "Negative"
+    print(f"Sentence:    {sentence}")
+    print(f"Probability: {probability:.4f}")
+    print(f"Prediction:  {label} (threshold = 0.5)")
+    print()
+
+# Example usage:
+# predict_sentiment("The food was amazing and the service was great.", model, dataset.token_map)
+# predict_sentiment("This was a terrible waste of money.", model, dataset.token_map)
+
